@@ -6,6 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -27,7 +28,6 @@ import type {
 } from "@/types/kitchen";
 
 const STORAGE_KEY = "kinrai-kitchen-v1";
-const cloudConfigured = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 
 const defaultTheme: ThemePreferences = {
   theme: "matcha",
@@ -112,7 +112,8 @@ const KitchenContext = createContext<KitchenContextValue | null>(null);
 export function KitchenProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<KitchenState>(initialState);
   const [hydrated, setHydrated] = useState(false);
-  const [cloudStatus, setCloudStatus] = useState<KitchenContextValue["cloudStatus"]>(cloudConfigured ? "syncing" : "local");
+  const [cloudStatus, setCloudStatus] = useState<KitchenContextValue["cloudStatus"]>("syncing");
+  const cloudEnabledRef = useRef(false);
 
   useEffect(() => {
     const hydrate = window.setTimeout(async () => {
@@ -123,20 +124,24 @@ export function KitchenProvider({ children }: { children: ReactNode }) {
       } catch {
         localStorage.removeItem(STORAGE_KEY);
       }
-      if (cloudConfigured) {
-        try {
-          const response = await fetch("/api/kitchen", { cache: "no-store" });
-          if (!response.ok) throw new Error("cloud unavailable");
+      try {
+        const response = await fetch("/api/kitchen", { cache: "no-store" });
+        if (response.status === 503) {
+          setCloudStatus("local");
+        } else if (!response.ok) {
+          setCloudStatus("error");
+        } else {
           const payload = await response.json() as { state?: unknown };
           if (payload.state) {
             const parsed = kitchenStateSchema.safeParse(payload.state);
             if (!parsed.success) throw new Error("invalid cloud state");
             nextState = parsed.data;
           }
+          cloudEnabledRef.current = true;
           setCloudStatus("synced");
-        } catch {
-          setCloudStatus("error");
         }
+      } catch {
+        setCloudStatus("error");
       }
       setState(nextState);
       setHydrated(true);
@@ -153,7 +158,7 @@ export function KitchenProvider({ children }: { children: ReactNode }) {
     root.dataset.cards = state.theme.cardStyle;
     root.style.setProperty("--custom-primary", state.theme.customPrimary);
     root.style.setProperty("--custom-accent", state.theme.customAccent);
-    if (!cloudConfigured) return;
+    if (!cloudEnabledRef.current) return;
     const sync = window.setTimeout(async () => {
       setCloudStatus("syncing");
       try {

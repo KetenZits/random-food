@@ -36,15 +36,29 @@ npm run build
 ## Supabase
 
 1. สร้าง Supabase project
-2. รัน migration ใน `supabase/migrations/202609060001_initial_schema.sql`
-3. คัดลอก `.env.example` เป็น `.env.local` แล้วใส่ค่าจริง
+2. รัน migration ใน `supabase/migrations/202609060001_initial_schema.sql` ที่ SQL Editor
+3. คัดลอก `.env.example` เป็น `.env.local` แล้วใส่ค่าจริง โดย `NEXT_PUBLIC_SUPABASE_URL` ต้องเป็น `https://xxxxx.supabase.co` ห้ามมี `/rest/v1/`
 4. เก็บ `SUPABASE_SERVICE_ROLE_KEY` ไว้ฝั่ง server เท่านั้น ห้ามใช้ตัวแปร `NEXT_PUBLIC_` กับคีย์นี้
 
 Schema เปิด RLS ทุกตารางโดยไม่เปิด anonymous policies และมี RPC `consume_planned_meal` สำหรับล็อกแถว หักปริมาณ และเขียน history/transaction ในฐานข้อมูล transaction เดียว โครงสร้างนี้ตั้งใจให้เพิ่ม authentication และ `user_id` ได้ภายหลังโดยไม่ต้องแก้ business model หลัก
 
-แอปใช้ local-first persistence เพื่อให้ทำงานได้แม้เน็ตหลุดหรือยังไม่ได้ตั้งค่า Supabase เมื่อมี `NEXT_PUBLIC_SUPABASE_URL` และ `SUPABASE_SERVICE_ROLE_KEY` ระบบจะโหลดและซิงก์ข้อมูลกับตาราง relational อัตโนมัติผ่าน `/api/kitchen`; คีย์ service role อยู่ใน server-only module และไม่ถูกส่งเข้า browser
+แอปใช้ local-first persistence เพื่อให้ทำงานได้แม้เน็ตหลุดหรือยังไม่ได้ตั้งค่า Supabase เมื่อ server มี URL และ `SUPABASE_SERVICE_ROLE_KEY` ระบบจะโหลดและซิงก์ข้อมูลกับตาราง relational อัตโนมัติผ่าน `/api/kitchen`; คีย์ service role อยู่ใน server-only module และไม่ถูกส่งเข้า browser
 
 เส้นทาง cloud sync ออกแบบสำหรับ deployment ส่วนตัวและตรวจ same-site request หากจะเปิดแอปสู่สาธารณะ ควรเพิ่ม Supabase Auth และผูกทุกตารางด้วย `user_id` ก่อน ตามคำแนะนำใน migration
+
+## Deploy บน Vercel (ใช้คนเดียว)
+
+แอปอยู่โฟลเดอร์ `kinaraidee/` ดังนั้นตอน Import GitHub repo ให้ตั้ง **Root Directory** เป็น `kinaraidee`
+
+ใส่ Environment Variables:
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `GEMINI_API_KEY` และ `GEMINI_MODEL` (ไม่บังคับ)
+
+จากนั้นเปิด **Deployment Protection** (Password หรือ Vercel Authentication) เพราะ API ซิงก์ครัวด้วย service role ไม่มีระบบ login
+
+อย่า commit ไฟล์ `.env.local` — ไฟล์นี้ถูก gitignore ไว้แล้ว
 
 ## AI meal generation
 
