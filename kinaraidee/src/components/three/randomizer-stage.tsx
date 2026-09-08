@@ -5,7 +5,9 @@ import { useReducedMotion } from "motion/react";
 
 const RandomizerScene = dynamic(() => import("@/components/three/randomizer-scene"), { ssr: false, loading: () => <div className="skeleton h-full w-full" /> });
 
-export function RandomizerStage({ active }: { active: boolean }) {
+export type RandomizerPhase = "idle" | "accelerating" | "spinning" | "settling" | "landed";
+
+export function RandomizerStage({ phase, selectedDays }: { phase: RandomizerPhase; selectedDays: string[] }) {
   const reducedMotion = useReducedMotion();
-  return <div className="absolute inset-0 h-full w-full max-w-full overflow-hidden" aria-hidden="true"><RandomizerScene active={active} reducedMotion={Boolean(reducedMotion)} /></div>;
+  return <div className="absolute inset-0 h-full w-full max-w-full overflow-hidden" aria-hidden="true"><RandomizerScene phase={phase} selectedDays={selectedDays} reducedMotion={Boolean(reducedMotion)} /></div>;
 }
