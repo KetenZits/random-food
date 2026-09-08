@@ -14,11 +14,13 @@
 [data-theme="custom"] { --primary:var(--custom-primary); --primary-hover:color-mix(in srgb,var(--custom-primary),#000 14%); --accent:var(--custom-accent); --accent-soft:color-mix(in srgb,var(--custom-accent),transparent 84%); }
 
 @theme inline {
-  --color-background: var(--background); --color-foreground: var(--foreground); --color-surface: var(--surface); --color-card: var(--card); --color-card-foreground: var(--card-foreground); --color-primary: var(--primary); --color-primary-foreground: var(--primary-foreground); --color-secondary: var(--secondary); --color-accent: var(--accent); --color-muted: var(--muted); --color-muted-soft: var(--muted-soft); --color-border: var(--border); --color-danger: var(--danger); --color-warning: var(--warning); --color-success: var(--success); --font-sans: "Noto Sans Thai", "Leelawadee UI", Tahoma, ui-sans-serif, system-ui, sans-serif;
+  --color-background: var(--background); --color-foreground: var(--foreground); --color-surface: var(--surface); --color-card: var(--card); --color-card-foreground: var(--card-foreground); --color-primary: var(--primary); --color-primary-foreground: var(--primary-foreground); --color-secondary: var(--secondary); --color-accent: var(--accent); --color-muted: var(--muted); --color-muted-soft: var(--muted-soft); --color-border: var(--border); --color-danger: var(--danger); --color-warning: var(--warning); --color-success: var(--success); --font-sans: var(--font-roboto-loaded), var(--font-kanit-loaded), sans-serif; --font-kanit: var(--font-kanit-loaded), sans-serif; --font-roboto: var(--font-roboto-loaded), sans-serif;
 }
 * { box-sizing: border-box; }
 html { background: var(--background); scroll-behavior: smooth; }
 body { margin:0; background:var(--background); color:var(--foreground); font-family:var(--font-sans); transition:background-color .3s ease,color .3s ease; }
+.font-kanit { font-family:var(--font-kanit-loaded),sans-serif; }
+.font-roboto { font-family:var(--font-roboto-loaded),sans-serif; }
 button,input,select,textarea { font:inherit; }
 button,a { -webkit-tap-highlight-color:transparent; }
 button { cursor:pointer; }

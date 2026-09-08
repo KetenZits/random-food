@@ -32,7 +32,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const mobileNavigation = [...navigation.filter((item) => item.href !== "/history"), { href: "/settings", label: "ตั้งค่า", shortLabel: "ตั้งค่า", icon: Settings }];
   return (
-    <div className="app-background min-h-dvh overflow-x-clip lg:grid lg:grid-cols-[232px_minmax(0,1fr)] xl:grid-cols-[248px_minmax(0,1fr)]">
+    <div className="app-background min-h-dvh lg:grid lg:grid-cols-[232px_minmax(0,1fr)] xl:grid-cols-[248px_minmax(0,1fr)]">
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-[232px] flex-col bg-[var(--sidebar)] px-5 py-7 text-[var(--sidebar-fg)] lg:flex xl:w-[248px]">
         <div className="px-2"><Logo /></div>
         <nav className="mt-10 space-y-1.5" aria-label="เมนูหลัก">

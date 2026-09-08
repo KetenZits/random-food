@@ -1,7 +1,21 @@
 import type { Metadata, Viewport } from "next";
+import { Kanit, Roboto } from "next/font/google";
 import { AppShell } from "@/components/layout/app-shell";
 import { KitchenProvider } from "@/features/kitchen/kitchen-provider";
 import "./globals.css";
+
+const kanit = Kanit({
+  weight: ["400", "500", "600", "700", "900"],
+  subsets: ["thai"],
+  display: "swap",
+  variable: "--font-kanit-loaded",
+});
+
+const roboto = Roboto({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-roboto-loaded",
+});
 
 export const metadata: Metadata = {
   title: { default: "กินไรดี — ผู้ช่วยคิดเมนูจากของในครัว", template: "%s | กินไรดี" },
@@ -32,7 +46,7 @@ try {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="th" suppressHydrationWarning>
+    <html lang="th" className={`${kanit.variable} ${roboto.variable}`} suppressHydrationWarning>
       <head><script dangerouslySetInnerHTML={{ __html: themeScript }} /></head>
       <body>
         <KitchenProvider>
